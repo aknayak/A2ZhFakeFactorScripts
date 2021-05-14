@@ -1,0 +1,23 @@
+Date: XXX
+Description: datacard for computing fake factor in A2Zh analysis
+------------------------------------------------------------------------------------------------------------------
+imax 1  number of channels
+jmax *  number of processes 
+kmax *  number of nuisance parameters (sources of systematical uncertainties)
+---------------------------------------------------------------------------
+shapes * * XXX.root $PROCESS $PROCESS_$SYSTEMATIC
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+Observation    XXX
+---------------------------------------------------------------------------
+bin             bin1      bin1
+process         fake      prompt
+process         0         1  
+rate            
+---------------------------------------------
+lumi            lnN   1.02      1.02 
+CMS_norm_fake   lnN   XXXX      1.00
+CMS_norm_prompt lnN   1.00      XXXX
+bin1 autoMCStats 5 1
+---------------------------------------------
+rprompt rateParam bin1 prompt 1 [0.5,2]
