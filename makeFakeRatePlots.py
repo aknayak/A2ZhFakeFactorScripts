@@ -27,8 +27,8 @@ if not os.path.exists('Fits'):
     os.makedirs('Fits')
 
 nbins = len(pt)-1
-hist_fr_data = TH1F("fr_data_"+lepType+"_"+etabin, "", nbins, array.array('d',pt))
-hist_fr_mc = TH1F("fr_mc_"+lepType+"_"+etabin, "", nbins, array.array('d',pt))
+hist_fr_data = TH1F("fr_data_%s_%s" %(lepType, etabin), "", nbins, array.array('d',pt))
+hist_fr_mc = TH1F("fr_mc_%s_%s" %(lepType, etabin), "", nbins, array.array('d',pt))
 
 for i, p in enumerate(ptbins):
     fakes_data = [0, 0]
@@ -36,9 +36,9 @@ for i, p in enumerate(ptbins):
     fakes_mc = [0, 0]
     errors_mc = [0, 0]
     for j, r in enumerate(regions):
-        datacardfile = 'datacards/datacard_fit_'+lepType+'_'+r+'_'+p+'_'+etabin+'.txt'
+        datacardfile = 'datacards/datacard_fit_%s_%s_%s_%s.txt' %(lepType, r, p, etabin)
         print 'fitting ', datacardfile
-        cmd = 'combine -M FitDiagnostics '+datacardfile+' --saveWithUncertainties --saveNormalizations --saveShapes'
+        cmd = 'combine -M FitDiagnostics %s --saveWithUncertainties --saveNormalizations --saveShapes' %(datacardfile)
         os.system(cmd)
         fitfile = TFile("fitDiagnosticsTest.root")
         hist_postfit_fake = fitfile.Get("shapes_fit_s/bin1/fake")
@@ -53,9 +53,9 @@ for i, p in enumerate(ptbins):
         fakeAndError = hist_prefit_fake.IntegralAndError(1, hist_prefit_fake.GetNbinsX(), error)
         print 'error on mc ', error
         errors_mc[j] = error
-        mv_cmd = 'mv higgsCombineTest.FitDiagnostics.mH120.root '+' Fits/higgsCombineTest.FitDiagnostics.mH120.'+lepType+'.'+r+'.'+p+'.'+etabin+'.root'
+        mv_cmd = 'mv higgsCombineTest.FitDiagnostics.mH120.root Fits/higgsCombineTest.FitDiagnostics.mH120.%s.%s.%s.%s.root' %(lepType, r, p, etabin)
         os.system(mv_cmd)
-        mv_cmd = 'mv fitDiagnosticsTest.root '+' Fits/fitDiagnosticsTest.'+lepType+'.'+r+'.'+p+'.'+etabin+'.root'
+        mv_cmd = 'mv fitDiagnosticsTest.root Fits/fitDiagnosticsTest.%s.%s.%s.%s.root' %(lepType, r, p, etabin)
         os.system(mv_cmd)
     ratio_error_data = (fakes_data[0]/fakes_data[1])*TMath.Sqrt(TMath.Power(errors_data[0]/fakes_data[0], 2) + TMath.Power(errors_data[1]/fakes_data[1], 2))
     hist_fr_data.SetBinContent(i+1, fakes_data[0]/fakes_data[1])
@@ -110,8 +110,8 @@ leg.Draw()
 if not os.path.exists('plots'):
     os.makedirs('plots')
 
-c1.SaveAs("plots/fakefactor_"+lepType+"_"+etabin+".png")
-outfile = TFile("plots/fakefactor_"+lepType+"_"+etabin+".root", "RECREATE")
+c1.SaveAs("plots/fakefactor_%s_%s.png" %(lepType, etabin))
+outfile = TFile("plots/fakefactor_%s_%s.root" %(lepType, etabin), "RECREATE")
 hist_fr_data.Write()
 hist_fr_mc.Write()
 outfile.Close()
