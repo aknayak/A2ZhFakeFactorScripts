@@ -24,16 +24,16 @@ prefit = options.prefit
 if not os.path.exists('Fits'):
     os.makedirs('Fits')
 
-datacardfile = 'datacards/datacard_fit_'+lepType+'_'+region+'_'+ptbin+'_'+etabin+'.txt'
+datacardfile = 'datacards/datacard_fit_%s_%s_%s_%s.root' %(lepType, region, ptbin, etabin)
 #print 'fitting ', datacardfile
 #Perform the fit, if not yet done
-fitfile = 'Fits/fitDiagnosticsTest.'+lepType+'.'+region+'.'+ptbin+'.'+etabin+'.root'
+fitfile = 'Fits/fitDiagnosticsTest.%s.%s.%s.%s.root' %(lepType, region, ptbin, etabin)
 if not os.path.exists(fitfile):
-    run_cmd = 'combine -M FitDiagnostics '+datacardfile+' --saveWithUncertainties --saveNormalizations --saveShapes'
+    run_cmd = 'combine -M FitDiagnostics %s --saveWithUncertainties --saveNormalizations --saveShapes' %(datacardfile)
     os.system(run_cmd)
-    mv_cmd = 'mv fitDiagnosticsTest.root '+' Fits/fitDiagnosticsTest.'+lepType+'.'+region+'.'+ptbin+'.'+etabin+'.root'
+    mv_cmd = 'mv fitDiagnosticsTest.root  Fits/fitDiagnosticsTest.%s.%s.%s.%s.root' %(lepType, region, ptbin, etabin)
     os.system(mv_cmd)
-    mv_cmd = 'mv higgsCombineTest.FitDiagnostics.mH120.root '+' Fits/higgsCombineTest.FitDiagnostics.mH120.'+lepType+'.'+region+'.'+ptbin+'.'+etabin+'.root'
+    mv_cmd = 'mv higgsCombineTest.FitDiagnostics.mH120.root Fits/higgsCombineTest.FitDiagnostics.mH120.%s.%s.%s.%s.root' %(lepType, region, ptbin, etabin)
     os.system(mv_cmd)
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -43,7 +43,7 @@ plot.ModTDRStyle()
 
 canvas = ROOT.TCanvas()
 
-shapefile = 'datacards/shapes_'+lepType+'_'+region+'_'+ptbin+'_'+etabin+'.root'
+shapefile = 'datacards/shapes_%s_%s_%s_%s.root' %(lepType, region, ptbin, etabin)
 print shapefile
 file_shapes = ROOT.TFile.Open(shapefile, "read")
 h_data_prefit = file_shapes.Get("data_obs")
@@ -58,7 +58,7 @@ second_dir = 'bin1'
 if prefit:
     first_dir = 'shapes_prefit'
 
-fitfile = 'Fits/fitDiagnosticsTest.'+lepType+'.'+region+'.'+ptbin+'.'+etabin+'.root'
+fitfile = 'Fits/fitDiagnosticsTest.%s.%s.%s.%s.root' %(lepType, region, ptbin, etabin)
 fin = ROOT.TFile(fitfile)
 
 h_prompt_fit = fin.Get(first_dir + '/' + second_dir + '/prompt')
@@ -128,7 +128,7 @@ if not os.path.exists('plots'):
     os.makedirs('plots')
 
 if prefit:
-    canvas.SaveAs("plots/mt_"+lepType+'.'+region+'.'+ptbin+'.'+etabin+"_prefit.png")
+    canvas.SaveAs("plots/mt_%s_%s_%s_%s_prefit.png" %(lepType, region, ptbin, etabin))
 else:
-    canvas.SaveAs("plots/mt_"+lepType+'.'+region+'.'+ptbin+'.'+etabin+"_postfit.png")
+    canvas.SaveAs("plots/mt_%s_%s_%s_%s_postfit.png" %(lepType, region, ptbin, etabin))
 
